@@ -1,5 +1,11 @@
 package com.epam.mjc;
 
+import java.sql.ClientInfoStatus;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 public class MethodParser {
 
     /**
@@ -20,6 +26,25 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+
+        List<MethodSignature.Argument> MyListArg = new ArrayList<>();
+        var SplitList = signatureString.split("\\(",2);
+        var PartOne = SplitList[0].split(" ");
+        var PartTwo = SplitList[1].split("[ ,+)]");
+        for (int i = 0; i < PartTwo.length-1; i= i +3 ){
+            MyListArg.add(new MethodSignature.Argument(PartTwo[i],PartTwo[i+1]));
+        }
+
+        MethodSignature methodSignature = new MethodSignature(signatureString,MyListArg);
+
+      byte CurrentPozInSplitList = 0;
+
+      if (PartOne.length == 3){
+          methodSignature.setAccessModifier(PartOne[CurrentPozInSplitList++]);
+      }
+      methodSignature.setReturnType(PartOne[CurrentPozInSplitList++]);
+      methodSignature.setMethodName(PartOne[CurrentPozInSplitList]);
+
+    return  methodSignature;
     }
 }
